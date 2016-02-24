@@ -42,11 +42,11 @@ type DateTimeFieldInstance struct {
 // Create a new DateTimeField with validators and widgets.
 func NewDateTimeField(name string, format string, vs Validators, ws ...Widget) *DateTimeField {
 	f := new(DateTimeField)
-	f.name = name
-	f.validators = vs
+	f.Name = name
+	f.Validators = vs
 	f.Format = format
 	if len(ws) > 0 {
-		f.widget = ws[0]
+		f.Widget = ws[0]
 	}
 	return f
 }
@@ -58,7 +58,7 @@ func (f *DateTimeFieldInstance) Clean(data Data) error {
 		f.V = m
 		v := m.rawValueAsString()
 		m.Kind = reflect.Struct
-		if v != nil {
+		if v != nil && *v != "" {
 			t, err := time.Parse(f.Format, *v)
 			if err != nil {
 				return errors.New(f.ErrorMessage)

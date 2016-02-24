@@ -1,11 +1,17 @@
 package gforms
 
+import (
+	"strings"
+)
+
 type Field interface {
 	New() FieldInterface
 	// Get field name
 	GetName() string
+	GetLabel() string
 	GetWidget() Widget
 	GetValidators() Validators
+	SetWidget(widget Widget)
 }
 
 type Fields struct {
@@ -46,27 +52,43 @@ func NewFields(fields ...Field) *Fields {
 }
 
 type BaseField struct {
-	name       string
-	validators Validators
-	widget     Widget
-	Field
+	Name string
+	HideLabel bool
+	Label string
+	Validators Validators
+	Widget     Widget
 }
 
 func (f *BaseField) GetName() string {
-	return f.name
+	return f.Name
+}
+
+func (f *BaseField) GetLabel() string {
+	if f.HideLabel {
+		return ""
+	}
+	if f.Label != "" {
+		return f.Label
+	}
+	return strings.Title(f.Name)
 }
 
 func (f *BaseField) GetWidget() Widget {
-	return f.widget
+	return f.Widget
 }
 
 func (f *BaseField) GetValidators() Validators {
-	return f.validators
+	return f.Validators
+}
+
+func (f *BaseField) SetWidget(widget Widget) {
+	f.Widget = widget
 }
 
 type FieldInterface interface {
 	GetModel() Field
 	GetName() string
+	GetLabel() string
 	GetV() *V
 	GetWidget() Widget
 	SetInitial(string)
@@ -92,6 +114,10 @@ func (f *FieldInstance) GetModel() Field {
 
 func (f *FieldInstance) GetName() string {
 	return f.Model.GetName()
+}
+
+func (f *FieldInstance) GetLabel() string {
+	return f.Model.GetLabel()
 }
 
 func (f *FieldInstance) GetWidget() Widget {

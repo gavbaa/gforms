@@ -34,10 +34,10 @@ type IntegerFieldInstance struct {
 // Create a new IntegerField with validators and widgets.
 func NewIntegerField(name string, vs Validators, ws ...Widget) *IntegerField {
 	f := new(IntegerField)
-	f.name = name
-	f.validators = vs
+	f.Name = name
+	f.Validators = vs
 	if len(ws) > 0 {
-		f.widget = ws[0]
+		f.Widget = ws[0]
 	}
 	return f
 }

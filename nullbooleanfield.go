@@ -31,10 +31,10 @@ type nullBooleanContext struct {
 // Create a new NullBooleanField with validators and widgets.
 func NewNullBooleanField(name string, vs Validators, ws ...Widget) *NullBooleanField {
 	f := new(NullBooleanField)
-	f.name = name
-	f.validators = vs
+	f.Name = name
+	f.Validators = vs
 	if len(ws) > 0 {
-		f.widget = ws[0]
+		f.Widget = ws[0]
 	}
 	return f
 }

@@ -39,7 +39,7 @@ func (ctx ModelContext) generateFields() []Field {
 		case reflect.Float32, reflect.Float64:
 			field = NewFloatField(c.Name, nil)
 		case reflect.String:
-			field = NewTextField(c.Name, nil)
+			field = NewTextField(c.Name, nil, nil)
 		case reflect.Bool:
 			field = NewBooleanField(c.Name, nil)
 		case reflect.Slice:

@@ -25,10 +25,10 @@ type TextFieldInstance struct {
 // Create a new TextField with validators and widgets.
 func NewTextField(name string, vs Validators, ws ...Widget) *TextField {
 	f := new(TextField)
-	f.name = name
-	f.validators = vs
+	f.Name = name
+	f.Validators = vs
 	if len(ws) > 0 {
-		f.widget = ws[0]
+		f.Widget = ws[0]
 	}
 	return f
 }

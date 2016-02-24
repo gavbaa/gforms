@@ -25,12 +25,12 @@ type MultipleTextFieldInstance struct {
 // Create a new MultipleTextField with validators and widgets.
 func NewMultipleTextField(name string, vs Validators, ws ...Widget) *MultipleTextField {
 	f := new(MultipleTextField)
-	f.name = name
-	f.validators = vs
+	f.Name = name
+	f.Validators = vs
 	if len(ws) > 0 {
-		f.widget = ws[0]
+		f.Widget = ws[0]
 	} else {
-		f.widget = SelectMultipleWidget(map[string]string{}, nil)
+		f.Widget = SelectMultipleWidget(map[string]string{}, nil)
 	}
 	return f
 }

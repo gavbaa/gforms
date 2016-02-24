@@ -34,10 +34,10 @@ type FloatFieldInstance struct {
 // Create a new FloatField with validators and widgets.
 func NewFloatField(name string, vs Validators, ws ...Widget) *FloatField {
 	f := new(FloatField)
-	f.name = name
-	f.validators = vs
+	f.Name = name
+	f.Validators = vs
 	if len(ws) > 0 {
-		f.widget = ws[0]
+		f.Widget = ws[0]
 	}
 	return f
 }
