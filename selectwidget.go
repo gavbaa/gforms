@@ -34,6 +34,7 @@ type SelectOptions interface {
 	Label(int) string
 	Value(int) string
 	Selected(int) bool
+	SelectedValue(int, *V) bool
 	Disabled(int) bool
 	Len() int
 }
@@ -57,6 +58,23 @@ func (opt StringSelectOptions) Selected(i int) bool {
 	}
 }
 
+func (opt StringSelectOptions) SelectedValue(i int, v *V) bool {
+	if v.IsNil {
+		selected := opt[i][2]
+		if strings.ToLower(selected) == "true" {
+			return true
+		} else {
+			return false
+		}
+	} else {
+		if v.RawStr == opt.Value(i) {
+			return true
+		} else {
+			return false
+		}
+	}
+}
+
 func (opt StringSelectOptions) Disabled(i int) bool {
 	disabled := opt[i][3]
 	if strings.ToLower(disabled) == "true" {
@@ -77,7 +95,8 @@ func (wg *selectWidget) html(f FieldInterface) string {
 	context.Multiple = wg.Multiple
 	opts := wg.Maker()
 	for i := 0; i < opts.Len(); i++ {
-		context.Options = append(context.Options, &selectOptionValue{Label: opts.Label(i), Value: opts.Value(i), Selected: opts.Selected(i), Disabled: opts.Disabled(i)})
+		context.Options = append(context.Options, &selectOptionValue{Label: opts.Label(i), Value: opts.Value(i),
+			Selected: opts.SelectedValue(i, f.GetV()), Disabled: opts.Disabled(i)})
 	}
 	context.Attrs = wg.Attrs
 	err := Template.ExecuteTemplate(&buffer, "SelectWidget", context)
