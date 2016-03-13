@@ -52,9 +52,9 @@ func NewFields(fields ...Field) *Fields {
 }
 
 type BaseField struct {
-	Name string
-	HideLabel bool
-	Label string
+	Name       string
+	HideLabel  bool
+	Label      string
 	Validators Validators
 	Widget     Widget
 }

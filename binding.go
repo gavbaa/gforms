@@ -66,7 +66,11 @@ func bindJson(req *http.Request) (*Data, error) {
 }
 
 func bindForm(req *http.Request) (*Data, error) {
-	req.ParseForm()
+	if req.Header.Get("Content-Type")[:20] == "multipart/form-data;" {
+		req.ParseMultipartForm(32 << 30)
+	} else {
+		req.ParseForm()
+	}
 	data := Data{}
 	for name, v := range req.Form {
 		if len(v) != 0 {
