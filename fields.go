@@ -152,6 +152,7 @@ func (f *FieldInstance) HasError() bool {
 }
 
 func (f *FieldInstance) SetInitial(v string) {
+	f.V.IsNil = false
 	f.V.RawStr = v
 }
 
