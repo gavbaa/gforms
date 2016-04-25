@@ -53,12 +53,12 @@ func NewFields(fields ...Field) *Fields {
 }
 
 type BaseField struct {
-	Name string
+	Name        string
 	Description string
-	HideLabel bool
-	Label string
-	Validators Validators
-	Widget     Widget
+	HideLabel   bool
+	Label       string
+	Validators  Validators
+	Widget      Widget
 }
 
 func (f *BaseField) GetName() string {

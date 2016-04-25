@@ -16,6 +16,8 @@ const defaultTemplates = `
 {{end}}{{end}}
 {{define "CheckboxMultipleWidget"}}{{$name := .Field.GetName}}{{range $idx, $val := .Options}}<input type="checkbox" name="{{$name | html}}" value="{{$val.Value | html}}"{{if $val.Checked}} checked{{end}}{{if $val.Disabled}} disabled{{end}}>{{$val.Label | html}}
 {{end}}{{end}}
+{{define "FileTypeField"}}<input type="file" name="{{.Field.GetName | html}}"></input>{{end}}
+{{define "TextAreaWidget"}}<textarea name="{{.Field.GetName | html}}" {{range $attr, $val := .Attrs}} {{$attr | html}}="{{$val | html}}"{{end}}>{{.Value | html}}</textarea>{{end}}
 `
 
 // all templates of Field and Widget

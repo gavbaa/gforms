@@ -10,15 +10,20 @@ import (
 
 type Form func(...*http.Request) *FormInstance
 
+type FormValidationFn func(f *FormInstance) []string
+
 // cleaned data for all fields.
 type CleanedData map[string]interface{}
 
 // FormInstance made by Form.
 type FormInstance struct {
-	fieldInstances *FieldInterfaces
-	Data           Data
-	CleanedData    CleanedData
-	ParseError     error
+	fieldInstances       *FieldInterfaces
+	Data                 Data
+	CleanedData          CleanedData
+	ParseError           error
+	FormErrors           []string
+	PostValidators       []FormValidationFn
+	RunAllPostValidators bool
 }
 
 // Create a new form instance from `http.Request`.
@@ -48,6 +53,9 @@ func (f *FormInstance) Fields() []FieldInterface {
 func (f *FormInstance) Errors() Errors {
 	errs := map[string][]string{}
 	var err []string
+	if len(f.FormErrors) > 0 {
+		errs[""] = f.FormErrors
+	}
 	for _, field := range f.fieldInstances.list {
 		name := field.GetModel().GetName()
 		err = field.Errors()
@@ -82,6 +90,19 @@ func (f *FormInstance) IsValid() bool {
 
 		if !field.GetV().IsNil {
 			f.CleanedData[name] = field.GetV().Value
+		}
+	}
+	// If all the fields validated successfully, run the form-wide validators.
+	if isValid {
+		for _, validator := range f.PostValidators {
+			errs := validator(f)
+			if len(errs) > 0 {
+				f.FormErrors = errs
+				isValid = false
+				if !f.RunAllPostValidators {
+					break
+				}
+			}
 		}
 	}
 	return isValid
@@ -121,13 +142,14 @@ func (f *FormInstance) Html() string {
 }
 
 // Define a new form with specified fields.
-func DefineForm(fs *Fields) Form {
+func DefineForm(fs *Fields, postValidators []FormValidationFn) Form {
 	return func(r ...*http.Request) *FormInstance {
 		f := new(FormInstance)
 		f.fieldInstances = newFieldInterfaces(fs)
 		if len(r) > 0 {
 			f.ParseError = f.parseRequest(r[0])
 		}
+		f.PostValidators = postValidators
 		return f
 	}
 }
