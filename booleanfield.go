@@ -49,7 +49,18 @@ func (f *BooleanFieldInstance) Clean(data Data) error {
 		if m.Kind == reflect.String {
 			vs := m.rawValueAsString()
 			if vs != nil {
-				v = true
+				if *vs == "" {
+					// TODO REMOVE THIS CASE AS SOON AS POSSIBLE.
+					// It's very confusing to allow the empty value to be true, but we need it for backwards compatibility.
+					v = true
+				} else {
+					b, err := strconv.ParseBool(*vs)
+					if err != nil {
+						m.IsNil = true
+					} else {
+						v = b
+					}
+				}
 			}
 		} else if m.Kind == reflect.Bool {
 			v = m.rawValueAsBool()
