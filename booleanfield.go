@@ -3,6 +3,7 @@ package gforms
 import (
 	"bytes"
 	"reflect"
+	"strings"
 )
 
 // It maps value to FormInstance.CleanedData as type `bool`.
@@ -48,7 +49,14 @@ func (f *BooleanFieldInstance) Clean(data Data) error {
 		if m.Kind == reflect.String {
 			vs := m.rawValueAsString()
 			if vs != nil {
-				v = true
+				vLower := strings.ToLower(*vs)
+				if vLower == "" {
+					// TODO REMOVE THIS CASE AS SOON AS POSSIBLE.
+					// It's very confusing to allow the empty value to be true, but we need it for backwards compatibility.
+					v = true
+				} else if vLower == "t" || vLower == "true" || vLower == "y" || vLower == "yes" {
+					v = true
+				}
 			}
 		} else if m.Kind == reflect.Bool {
 			v = m.rawValueAsBool()
