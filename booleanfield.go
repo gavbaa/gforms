@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 // It maps value to FormInstance.CleanedData as type `bool`.
@@ -50,15 +51,19 @@ func (f *BooleanFieldInstance) Clean(data Data) error {
 			vs := m.rawValueAsString()
 			if vs != nil {
 				if *vs == "" {
-					// TODO REMOVE THIS CASE AS SOON AS POSSIBLE.
-					// It's very confusing to allow the empty value to be true, but we need it for backwards compatibility.
+					// It's very confusing to allow the empty value to be true, but we need it for checkboxes.
 					v = true
 				} else {
-					b, err := strconv.ParseBool(*vs)
-					if err != nil {
-						m.IsNil = true
+					// Per the HTML standard, "on" is the default value for a checkbox with no value.
+					if strings.ToLower(*vs) == "on" {
+						v = true
 					} else {
-						v = b
+						b, err := strconv.ParseBool(*vs)
+						if err != nil {
+							m.IsNil = true
+						} else {
+							v = b
+						}
 					}
 				}
 			}
@@ -106,3 +111,4 @@ func (f *BooleanFieldInstance) html() string {
 func (f *BooleanFieldInstance) Html() string {
 	return fieldToHtml(f)
 }
+
