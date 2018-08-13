@@ -8,6 +8,7 @@ type Field interface {
 	New() FieldInterface
 	// Get field name
 	GetName() string
+	GetDescription() string
 	GetLabel() string
 	GetWidget() Widget
 	GetValidators() Validators
@@ -52,15 +53,20 @@ func NewFields(fields ...Field) *Fields {
 }
 
 type BaseField struct {
-	Name       string
-	HideLabel  bool
-	Label      string
-	Validators Validators
-	Widget     Widget
+	Name        string
+	Description string
+	HideLabel   bool
+	Label       string
+	Validators  Validators
+	Widget      Widget
 }
 
 func (f *BaseField) GetName() string {
 	return f.Name
+}
+
+func (f *BaseField) GetDescription() string {
+	return f.Description
 }
 
 func (f *BaseField) GetLabel() string {
@@ -88,6 +94,7 @@ func (f *BaseField) SetWidget(widget Widget) {
 type FieldInterface interface {
 	GetModel() Field
 	GetName() string
+	GetDescription() string
 	GetLabel() string
 	GetV() *V
 	GetWidget() Widget
@@ -120,6 +127,10 @@ func (f *FieldInstance) GetLabel() string {
 	return f.Model.GetLabel()
 }
 
+func (f *FieldInstance) GetDescription() string {
+	return f.Model.GetDescription()
+}
+
 func (f *FieldInstance) GetWidget() Widget {
 	return f.Model.GetWidget()
 }
@@ -141,6 +152,7 @@ func (f *FieldInstance) HasError() bool {
 }
 
 func (f *FieldInstance) SetInitial(v string) {
+	f.V.IsNil = false
 	f.V.RawStr = v
 }
 
