@@ -37,6 +37,7 @@ func NewFileField(name string, vs Validators, ws ...Widget) *FileField {
 func (f *FileFieldInstance) Clean(data Data) error {
 	m, hasField := data[f.Model.GetName()]
 	if hasField {
+		// TODO: Improve this to be more representative of actual files.
 		f.V = m
 		v := m.rawValueAsString()
 		m.Kind = reflect.String

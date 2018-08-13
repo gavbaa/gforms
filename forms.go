@@ -10,7 +10,7 @@ import (
 
 type Form func(...*http.Request) *FormInstance
 
-type FormValidationFn func(f *FormInstance) []string
+type FormValidationFn func(f *FormInstance) (bool, []string)
 
 // cleaned data for all fields.
 type CleanedData map[string]interface{}
@@ -95,7 +95,10 @@ func (f *FormInstance) IsValid() bool {
 	// If all the fields validated successfully, run the form-wide validators.
 	if isValid {
 		for _, validator := range f.PostValidators {
-			errs := validator(f)
+			validated, errs := validator(f)
+			if !validated {
+				isValid = false
+			}
 			if len(errs) > 0 {
 				f.FormErrors = errs
 				isValid = false
