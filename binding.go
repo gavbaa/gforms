@@ -78,9 +78,11 @@ func bindForm(req *http.Request) (*Data, error) {
 		}
 	}
 	// Grab handles to files
-	for name, fheaders := range req.MultipartForm.File {
-		for _, hdr := range fheaders {
-			data[name] = newV(name, hdr, reflect.Struct)
+	if req.MultipartForm != nil {
+		for name, fheaders := range req.MultipartForm.File {
+			for _, hdr := range fheaders {
+				data[name] = newV(name, hdr, reflect.Struct)
+			}
 		}
 	}
 
