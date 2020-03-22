@@ -75,7 +75,9 @@ func bindForm(req *http.Request) (*Data, error) {
 	data := Data{}
 	for name, v := range req.Form {
 		if len(v) != 0 {
-			data[name] = newV(strings.TrimSpace(v[0]), v, reflect.String)
+			// Trim the extra whitespace from the value within the interface
+			v[0] = strings.TrimSpace(v[0])
+			data[name] = newV(v[0], v, reflect.String)
 		}
 	}
 	// Grab handles to files
