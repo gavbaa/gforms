@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"reflect"
 	"strconv"
+	"strings"
 	"unicode"
 	"unicode/utf16"
 	"unicode/utf8"
@@ -74,7 +75,7 @@ func bindForm(req *http.Request) (*Data, error) {
 	data := Data{}
 	for name, v := range req.Form {
 		if len(v) != 0 {
-			data[name] = newV(v[0], v, reflect.String)
+			data[name] = newV(strings.TrimSpace(v[0]), v, reflect.String)
 		}
 	}
 	// Grab handles to files
